@@ -155,7 +155,7 @@
     });
 
     // サーバーにPOSTリクエストを送信
-    fetch('/start-selenium', {
+    fetch('http://127.0.0.1:5000/start-selenium', {  // ローカルのFlaskサーバーにリクエストを送信
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
