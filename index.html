@@ -143,15 +143,35 @@
 
       // 「Selenium起動」ボタンのクリックイベント
       seleniumStartBtn.addEventListener('click', function() {
-        fetch('/start-selenium', { method: 'POST' })
-          .then(response => response.json())
-          .then(data => {
-            alert('Seleniumが起動しました。');
-          })
-          .catch(error => {
-            console.error('エラー:', error);
-          });
-      });
+    // リンク一覧を収集
+    const links = [];
+    const linkItems = document.querySelectorAll('.link-item');
+    linkItems.forEach(linkItem => {
+        const urlInput = linkItem.querySelector('input[type="text"]');
+        const linkElement = linkItem.querySelector('a');
+        if (urlInput.value || linkElement) {
+            links.push({ url: linkElement ? linkElement.href : urlInput.value });
+        }
+    });
+
+    // サーバーにPOSTリクエストを送信
+    fetch('/start-selenium', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ links: links }) // リンク一覧を送信
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Seleniumの結果:', data);
+        alert('Seleniumが起動しました。');
+        // 結果に基づいて処理を行う（例：リンクの赤色表示）
+    })
+    .catch(error => {
+        console.error('エラー:', error);
+    });
+});
 
       // 最初にローカルストレージからリンクを読み込んで表示
       loadLinks();
