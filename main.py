@@ -18,11 +18,12 @@ def get_driver():
 @app.route('/start-selenium', methods=['POST'])
 def start_selenium():
     # フロントエンドからのリンク一覧を受け取る
-    links = request.json.get('links', [])
-    driver = get_driver()
-
-    results = []
+    data = request.get_json()  # JSONデータを取得
+    links = data.get('links', [])  # 'links'データを取得
     
+    driver = get_driver()
+    results = []
+
     for link in links:
         url = link['url']
         driver.get(url)
@@ -38,7 +39,7 @@ def start_selenium():
             results.append({"url": url, "status": "success"})
     
     driver.quit()
-    return jsonify(results)
+    return jsonify(results)  # 結果をJSON形式で返す
 
 if __name__ == '__main__':
     app.run(debug=True)
